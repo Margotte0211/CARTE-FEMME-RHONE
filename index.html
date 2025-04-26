@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Femmes marquantes de la Vallée du Rhône</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+    .legend {
+      background: white;
+      padding: 10px;
+      line-height: 1.5em;
+    }
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+    .popup-img {
+      margin-top: 8px;
+      width: 100px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([45.5, 5], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const domainColors = {
+      "Politique": "red",
+      "Culture": "green",
+      "Sciences": "blue",
+      "Sport": "gold"
+    };
+
+    const femmes = [
+      {
+        nom: "Henriette d'Angeville",
+        ville: "Genève",
+        coords: [46.2, 6.15],
+        domaine: "Sport",
+        bio: "Pionnière de l’alpinisme, deuxième femme à gravir le Mont Blanc.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Henriette_d%27Angeville.jpg/220px-Henriette_d%27Angeville.jpg"
+      },
+      {
+        nom: "Ruth Dreifuss",
+        ville: "Genève",
+        coords: [46.2, 6.14],
+        domaine: "Politique",
+        bio: "Première femme présidente de la Confédération suisse.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Ruth_Dreifuss.jpg/220px-Ruth_Dreifuss.jpg"
+      },
+      {
+        nom: "Simone Chapuis-Bischof",
+        ville: "Genève",
+        coords: [46.2044, 6.1432],
+        domaine: "Politique",
+        bio: "Militante genevoise pour le droit de vote des femmes en Suisse.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Simone_Chapuis-Bischof_portrait.jpg/220px-Simone_Chapuis-Bischof_portrait.jpg"
+      },
+      {
+        nom: "Noémie de Lattre",
+        ville: "Genève",
+        coords: [46.205, 6.14],
+        domaine: "Culture",
+        bio: "Humoriste féministe et comédienne engagée.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Noemie_De_Lattre_2018.jpg/220px-Noemie_De_Lattre_2018.jpg"
+      },
+      {
+        nom: "Louise Labé",
+        ville: "Lyon",
+        coords: [45.75, 4.85],
+        domaine: "Culture",
+        bio: "Poétesse de la Renaissance, figure majeure de la littérature lyonnaise.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Louise_Labe.jpg/220px-Louise_Labe.jpg"
+      },
+      {
+        nom: "Juliette Récamier",
+        ville: "Lyon",
+        coords: [45.76, 4.83],
+        domaine: "Culture",
+        bio: "Salonnière influente du XIXe siècle, amie de Chateaubriand.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Gerard%2C_Mme_Recamier.jpg/220px-Gerard%2C_Mme_Recamier.jpg"
+      },
+      {
+        nom: "Najat Vallaud-Belkacem",
+        ville: "Villeurbanne",
+        coords: [45.77, 4.88],
+        domaine: "Politique",
+        bio: "Ancienne ministre de l'Éducation nationale, première femme à ce poste.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Najat_Vallaud-Belkacem_2012.jpg/220px-Najat_Vallaud-Belkacem_2012.jpg"
+      },
+      {
+        nom: "Fatima Aït-Boune",
+        ville: "Lyon",
+        coords: [45.76, 4.84],
+        domaine: "Politique",
+        bio: "Militante féministe lyonnaise.",
+        image: ""
+      },
+      {
+        nom: "Evelyne Dhéliat",
+        ville: "Lyon",
+        coords: [45.76, 4.83],
+        domaine: "Culture",
+        bio: "Présentatrice météo emblématique, ayant grandi à Lyon.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/%C3%89velyne_Dh%C3%A9liat_2011.jpg/220px-%C3%89velyne_Dh%C3%A9liat_2011.jpg"
+      },
+      {
+        nom: "Marguerite Soubeyran",
+        ville: "Valence",
+        coords: [44.9333, 4.9],
+        domaine: "Sciences",
+        bio: "Cofondatrice d'une école à Valence et résistante.",
+        image: ""
+      },
+      {
+        nom: "Émilie Satt",
+        ville: "Romans-sur-Isère",
+        coords: [45.045, 5.05],
+        domaine: "Culture",
+        bio: "Chanteuse du duo Madame Monsieur, originaire de la Drôme.",
+        image: ""
+      },
+      {
+        nom: "Germaine Tillion",
+        ville: "Trièves",
+        coords: [44.85, 5.7333],
+        domaine: "Sciences",
+        bio: "Ethnologue et résistante, active dans le Vercors.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Germaine_Tillion_%28vers_1940%29.jpg/220px-Germaine_Tillion_%28vers_1940%29.jpg"
+      },
+      {
+        nom: "Marie-Josée Roig",
+        ville: "Avignon",
+        coords: [43.95, 4.81],
+        domaine: "Politique",
+        bio: "Ancienne maire d’Avignon.",
+        image: ""
+      },
+      {
+        nom: "Laurence Equilbey",
+        ville: "Avignon",
+        coords: [43.94, 4.81],
+        domaine: "Culture",
+        bio: "Cheffe d’orchestre ayant dirigé l’Opéra Grand Avignon.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Laurence_Equilbey_2014.jpg/220px-Laurence_Equilbey_2014.jpg"
+      },
+      {
+        nom: "Élise Ventre",
+        ville: "Arles",
+        coords: [43.6766, 4.6278],
+        domaine: "Culture",
+        bio: "Actrice née à Arles.",
+        image: ""
+      },
+      {
+        nom: "Aya Cissoko",
+        ville: "Marseille",
+        coords: [43.3, 5.4],
+        domaine: "Sport",
+        bio: "Championne du monde de boxe et écrivaine engagée.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Aya_Cissoko_Maison_de_la_po%C3%A9sie_2019.jpg/220px-Aya_Cissoko_Maison_de_la_po%C3%A9sie_2019.jpg"
+      },
+      {
+        nom: "Kenzy",
+        ville: "Marseille",
+        coords: [43.2965, 5.3698],
+        domaine: "Culture",
+        bio: "Rappeuse, fondatrice de Mafia Trece.",
+        image: ""
+      },
+      {
+        nom: "Nina Kibuanda",
+        ville: "Marseille",
+        coords: [43.296, 5.37],
+        domaine: "Culture",
+        bio: "Actrice et metteuse en scène dans la vie culturelle marseillaise.",
+        image: ""
+      },
+      {
+        nom: "Christine Taubira",
+        ville: "Marseille",
+        coords: [43.3, 5.4],
+        domaine: "Politique",
+        bio: "Figure intellectuelle et politique influente, active à Marseille.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Christiane_Taubira_2013.jpg/220px-Christiane_Taubira_2013.jpg"
+      },
+      {
+        nom: "Marion Bartoli",
+        ville: "Montferrand (Haute-Loire)",
+        coords: [45.05, 3.88],
+        domaine: "Sport",
+        bio: "Championne de tennis ayant entraîné dans le sud.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Marion_Bartoli_Wimbledon_2013.jpg/220px-Marion_Bartoli_Wimbledon_2013.jpg"
+      },
+      {
+        nom: "Amélie Gex",
+        ville: "La Chapelle-Blanche",
+        coords: [45.474, 6.116],
+        domaine: "Culture",
+        bio: "Poétesse savoyarde, défenseuse du patois franco-provençal.",
+        image: ""
+      },
+      {
+        nom: "Marie Durand",
+        ville: "Aigues-Mortes",
+        coords: [43.5667, 4.2],
+        domaine: "Politique",
+        bio: "Emprisonnée pour sa foi protestante, symbole de résistance.",
+        image: ""
+      }
+    ];
+
+    femmes.forEach(femme => {
+      const color = domainColors[femme.domaine];
+      const popupContent = `
+        <b>${femme.nom}</b><br>
+        <i>${femme.ville}</i><br>
+        ${femme.bio}
+        ${femme.image ? `<br><img src="${femme.image}" class="popup-img" />` : ''}
+      `;
+
+      L.circleMarker(femme.coords, {
+        radius: 8,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.7
+      })
+      .bindPopup(popupContent)
+      .addTo(map);
+    });
+
+    const legend = L.control({ position: "bottomright" });
+    legend.onAdd = function(map) {
+      const div = L.DomUtil.create("div", "legend");
+      div.innerHTML = "<strong>Domaine</strong><br>" +
+        `<i style="background: red"></i> Politique<br>` +
+        `<i style="background: green"></i> Culture<br>` +
+        `<i style="background: blue"></i> Sciences<br>` +
+        `<i style="background: gold"></i> Sport`;
+      return div;
+    };
+    legend.addTo(map);
+  </script>
+</body>
+</html>
